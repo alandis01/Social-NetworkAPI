@@ -1,26 +1,16 @@
+const express = require('express');
+const db = require('./config/connection');
+const routes = require('./routes');
 
-{
-    "name": "socialnetworkapi-nosql",
-    "version": "1.0.0",
-    "description": "## User Story",
-    "main": "server.js",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "seed": "node utils/seed"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/alandis01/Social-NetworkAPI-NoSQL.git"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "bugs": {
-      "url": "https://github.com/alandis01/Social-NetworkAPI/issues"
-    },
-    "homepage": "https://github.com/alandis01/Social-NetworkAPIL#readme",
-    "dependencies": {
-      "express": "^4.18.2",
-      "mongoose": "^5.9.9"
-    }
-  }
+const PORT = 3001;
+const app = express();
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(routes);
+
+db.once('open', () => {
+  app.listen(PORT, () => {
+    console.log(`API server running on port ${PORT}!`);
+  });
+});
