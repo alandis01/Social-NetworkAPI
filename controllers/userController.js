@@ -89,9 +89,31 @@ const userController = {
         });
     },
 
-    
+    removeFriend(req, res) {
+        User.findByIdAndUpdate(
+            { _id: req.params.userId },
+            { $pull: { friends: req.params.friendId }},
+            { runValidators: true, new: true }
+        )
+        .then ((user) => {
+            User.findByIdAndUpdate(
+                { _id: req.params.friendId },
+                { $pull: { friends: req.params.friendId }},
+                { new: true }
+            )
+        })
+        .then ((user) =>
+        !user
+        ? res 
+        .json({ message: 'Success, friend has been removed'})
+        .json(user)
+        : res.status(404)
+        )
+        .catch((err) => {
+            res.status(500).json(err)
+        });
+    },
 
-}
-
+};
 
 module.export = userController;
